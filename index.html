@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kế hoạch Kinh doanh: Hệ sinh thái NNS - Shaping Future Work</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Strategic Harmony (Deep Slate, Professional Cyan, Amber Accent, Off-White) -->
+    <!-- Application Structure Plan: A professional single-page corporate website structure designed to present a comprehensive business plan. The structure is thematic and logical, guiding the user from the high-level vision (Hero, About) to the core offerings (Solutions), market validation (Insights), execution plan (Roadmap), team (Experts), marketing initiatives (Contests), and finally, the financial viability (Financials). This narrative flow is ideal for investors and partners. Navigation is handled by a sticky header with smooth scrolling. -->
+    <!-- Visualization & Content Choices: Data from the business plan is visualized using Chart.js for market trends and financial projections, making complex numbers easy to digest. The ecosystem's BUs are presented in a clean card layout for clarity. The 3-year roadmap is visualized as an interactive timeline. All text is synthesized from the source report to be concise and impactful. Icons (Unicode) are used to enhance visual communication. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8fafc;
+        }
+        .hero-bg {
+            background-color: #082f49;
+            background-image: linear-gradient(135deg, #082f49 0%, #0e7490 100%);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f59e0b;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .section-title {
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0891b2;
+            border-radius: 2px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .expert-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #94a3b8;
+            margin: -80px auto 20px auto;
+            border: 4px solid white;
+        }
+        .financial-tab.active {
+            border-color: #0891b2;
+            background-color: #f0f9ff;
+            color: #0891b2;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: -21px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #f8fafc;
+            border: 4px solid #0891b2;
+        }
+        .gemini-chat-popup {
+            transition: all 0.3s ease-in-out;
+        }
+        .gemini-chat-bubble {
+            max-width: 80%;
+        }
+        .gemini-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0891b2;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <!-- Header & Navigation -->
+    <header id="main-header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="#" class="text-2xl font-bold text-slate-900">NNS</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-slate-600 hover:text-slate-900 font-semibold">Tuyên ngôn</a>
+                    <a href="#solutions" class="nav-link text-slate-600 hover:text-slate-900 font-semibold">Giải pháp</a>
+                    <a href="#roadmap" class="nav-link text-slate-600 hover:text-slate-900 font-semibold">Lộ trình</a>
+                    <a href="#financials" class="nav-link text-slate-600 hover:text-slate-900 font-semibold">Tài chính</a>
+                    <a href="#experts" class="nav-link text-slate-600 hover:text-slate-900 font-semibold">Đội ngũ</a>
+                </nav>
+                <a href="#cta" class="hidden md:inline-block bg-cyan-600 text-white font-bold py-2 px-5 rounded-full hover:bg-cyan-700 transition-colors">Hợp tác</a>
+                <button id="mobile-menu-button" class="md:hidden text-slate-800 z-50">
+                    <span id="hamburger-icon" class="text-3xl">☰</span>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-white/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 text-2xl font-semibold">
+            <a href="#about" class="nav-link text-slate-800">Tuyên ngôn</a>
+            <a href="#solutions" class="nav-link text-slate-800">Giải pháp</a>
+            <a href="#roadmap" class="nav-link text-slate-800">Lộ trình</a>
+            <a href="#financials" class="nav-link text-slate-800">Tài chính</a>
+            <a href="#experts" class="nav-link text-slate-800">Đội ngũ</a>
+            <a href="#cta" class="mt-8 bg-cyan-600 text-white font-bold py-3 px-8 rounded-full">Hợp tác</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-bg text-white">
+            <div class="container mx-auto px-4 py-24 md:py-32 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">Shaping Future Work</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-slate-200">
+                    Chúng tôi kiến tạo **Hệ điều hành cho Vốn con người**, cung cấp các giải pháp toàn diện dựa trên dữ liệu và công nghệ để dẫn dắt tương lai công việc thông qua hệ điều hành sự nghiệp với hệ sinh thái toàn diện, bền vững cho Việt Nam.
+                </p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#solutions" class="bg-amber-500 text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-amber-400 transition-transform transform hover:scale-105">Khám phá Giải pháp</a>
+                    <a href="#cta" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-cyan-700 transition-colors transform hover:scale-105">Trở thành Đối tác</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About NNS Section -->
+        <section id="about" class="py-20 md:py-28 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-4xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Tái định nghĩa Thị trường Vốn Con người</h2>
+                    <p class="mt-6 text-lg text-slate-600 leading-relaxed">Trong kỷ nguyên của sự biến đổi không ngừng, những tấm bản đồ cũ về sự nghiệp đã trở nên lỗi thời. Chúng ta không cần một tấm bản đồ tốt hơn, chúng ta cần một **hệ thống dẫn đường thông minh hơn**. NNS ra đời từ chính nhu cầu cấp thiết đó, kiến tạo nên "Hệ điều hành cho Vốn con người" của nền kinh tế số Việt Nam.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Triết lý Kinh doanh Cốt lõi: 4x4</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed">Nền tảng của NNS được xây dựng dựa trên sự thấu hiểu sâu sắc về toàn bộ vòng đời sự nghiệp. Chúng tôi gọi đó là triết lý **4x4** – một ma trận giá trị toàn diện, là DNA của mọi sản phẩm và dịch vụ mà chúng tôi cung cấp.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-slate-800">04 Nhóm Khách hàng Trọng tâm</h4>
+                                <p class="text-sm text-slate-500">Sinh viên & Người mới bắt đầu, Chuyên gia, Lãnh đạo, và Doanh chủ.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">04 Trụ cột Dịch vụ Trọn đời</h4>
+                                <p class="text-sm text-slate-500">Học tập Năng động, Làm việc Hiệu quả, Phát triển Sự nghiệp Đôi, và Để lại Di sản.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border">
+                        <h3 class="font-bold text-slate-800 mb-4">Kiến trúc Hệ sinh thái: Cỗ máy Tăng trưởng Cộng hưởng</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-600 font-bold text-xl mt-1">⚙️</span>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800">Lõi Công nghệ (HRPioneer.com)</h4>
+                                    <p class="text-sm text-slate-500">Trái tim và bộ não của hệ thống, nơi xử lý dữ liệu và vận hành các thuật toán AI.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-600 font-bold text-xl mt-1">🌐</span>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800">Cổng Chính (nns.com.vn)</h4>
+                                    <p class="text-sm text-slate-500">Bộ mặt của thương hiệu, nơi hội tụ và điều hướng người dùng đến các giải pháp.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start gap-3">
+                                <span class="text-cyan-600 font-bold text-xl mt-1">🛰️</span>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800">Các Vệ tinh Chuyên biệt</h4>
+                                    <p class="text-sm text-slate-500">Mỗi tên miền là một "vệ tinh" được tối ưu hóa để thống trị một thị trường ngách, tạo thành một mạng lưới thu hút người dùng và dữ liệu.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solutions Section -->
+        <section id="solutions" class="py-20 md:py-28 bg-slate-100 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Một Hành trình, Một Hệ sinh thái</h2>
+                    <p class="mt-6 text-lg text-slate-600">Hãy hình dung hành trình của Nga, một người dùng điển hình: Từ một sinh viên trên `StudentCorp.vn`, trở thành chuyên gia trên `VnExpert.vn`, rồi thành lãnh đạo trên `CEOProfile.vn`. Trong suốt hành trình đó, Nga chỉ cần một tài khoản duy nhất. Đây chính là sức mạnh của một hệ sinh thái trọn đời.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- For Business -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center md:text-left">Dành cho Doanh nghiệp & Doanh chủ</h3>
+                        <div class="space-y-6">
+                            <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">👑</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Kết nối Thượng tầng (CEOProfile)</h4>
+                                    <p class="text-slate-600 text-sm">Xây dựng thương hiệu lãnh đạo và kết nối chiến lược thông qua mạng lưới C-Suite độc quyền.</p>
+                                </div>
+                            </div>
+                             <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">⚙️</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Tối ưu Hiệu suất (HPO)</h4>
+                                    <p class="text-slate-600 text-sm">Xây dựng tổ chức hiệu suất cao (HPO) và Cung cấp dịch vụ tư vấn và thuê ngoài quy trình nhân sự (Outsourcing) cao cấp.</p>
+                                </div>
+                            </div>
+                             <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">🏢</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Tăng trưởng SME (VietSME)</h4>
+                                    <p class="text-slate-600 text-sm">Cung cấp cổng dịch vụ và kiến thức quản trị được thiết kế riêng cho doanh nghiệp vừa và nhỏ.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- For Individuals -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center md:text-left">Dành cho Sinh viên, Chuyên gia & Lãnh đạo</h3>
+                        <div class="space-y-6">
+                             <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">🎓</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Khởi tạo Sự nghiệp (StudentCorp)</h4>
+                                    <p class="text-slate-600 text-sm">Cầu nối chiến lược giữa tài năng trẻ và doanh nghiệp qua cổng thông tin thực tập và workshop.</p>
+                                </div>
+                            </div>
+                            <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">🏅</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Nâng cấp Chuyên môn (Học viện NNS)</h4>
+                                    <p class="text-slate-600 text-sm">Cung cấp các khóa học và chứng chỉ chuyên sâu giúp bạn khẳng định vị thế trong ngành.</p>
+                                </div>
+                            </div>
+                            <div class="card-hover bg-white p-6 rounded-2xl shadow-lg border border-slate-200 flex items-start gap-4">
+                                <div class="text-3xl mt-1">🚀</div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900">Dẫn dắt Tương lai (Duocareers)</h4>
+                                    <p class="text-slate-600 text-sm">Khám phá và thực hành các mô hình sự nghiệp tiên phong như "sự nghiệp song song".</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section id="insights" class="py-20 md:py-28 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Tri thức & Insights</h2>
+                    <p class="mt-6 text-lg text-slate-600">Giống như BCG hay Gallup, chúng tôi biến dữ liệu thành trí tuệ. Khám phá các báo cáo độc quyền và các công cụ phân tích thông minh được vận hành bởi AI.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="chart-container">
+                        <canvas id="insightsChart"></canvas>
+                    </div>
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-slate-800">✨ Phân tích Cơ hội Thị trường</h3>
+                        <p class="text-slate-600">Chọn một ngành và một vai trò để xem bản phân tích ngắn về cơ hội, các kỹ năng cần thiết và thách thức do AI của chúng tôi tạo ra.</p>
+                        <div class="space-y-4">
+                            <select id="industry-select" class="w-full p-3 border border-slate-300 rounded-lg bg-white">
+                                <option value="Fintech">Công nghệ Tài chính (Fintech)</option>
+                                <option value="Edtech">Công nghệ Giáo dục (Edtech)</option>
+                                <option value="E-commerce">Thương mại Điện tử</option>
+                                <option value="Manufacturing">Sản xuất</option>
+                            </select>
+                            <select id="role-select" class="w-full p-3 border border-slate-300 rounded-lg bg-white">
+                                <option value="Data Analyst">Chuyên viên Phân tích Dữ liệu</option>
+                                <option value="Digital Marketer">Chuyên viên Digital Marketing</option>
+                                <option value="Product Manager">Quản lý Sản phẩm</option>
+                                <option value="HR Business Partner">Đối tác Nhân sự Chiến lược</option>
+                            </select>
+                            <button id="generate-analysis-btn" class="w-full bg-cyan-600 text-white font-bold py-3 px-6 rounded-full hover:bg-cyan-700 transition-colors flex items-center justify-center">
+                                <span id="generate-btn-text">Tạo Phân tích</span>
+                                <div id="generate-spinner" class="hidden gemini-spinner ml-2"></div>
+                            </button>
+                        </div>
+                         <div id="analysis-result" class="mt-4 p-4 bg-slate-100 rounded-lg text-slate-700 min-h-[100px]"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap Section -->
+        <section id="roadmap" class="py-20 md:py-28 bg-slate-100 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Lộ trình Phát triển</h2>
+                    <p class="mt-6 text-lg text-slate-600">Chúng tôi triển khai theo một lộ trình 3 giai đoạn được tính toán kỹ lưỡng, tập trung vào việc xây dựng "bánh đà" tăng trưởng một cách bền vững.</p>
+                </div>
+                <div class="relative max-w-2xl mx-auto">
+                    <div class="border-l-2 border-cyan-600 absolute h-full top-0 left-4"></div>
+                    <!-- Phase 1 -->
+                    <div class="mb-12 pl-12 relative timeline-item">
+                        <div class="text-amber-500 text-sm font-bold mb-1">GIAI ĐOẠN 1 (NĂM 1)</div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Gieo mầm & Xây dựng Lực hấp dẫn</h3>
+                        <p class="text-slate-600">Ra mắt StudentCorp, Nghề Nhân sự, VnExpert. Hoàn thiện lõi công nghệ HRPioneer.</p>
+                        <p class="mt-2 font-semibold text-cyan-700">Mục tiêu: 50,000 sinh viên & 500 chuyên gia.</p>
+                    </div>
+                    <!-- Phase 2 -->
+                    <div class="mb-12 pl-12 relative timeline-item">
+                         <div class="text-amber-500 text-sm font-bold mb-1">GIAI ĐOẠN 2 (NĂM 2)</div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Mở rộng & Thương mại hóa</h3>
+                        <p class="text-slate-600">Ra mắt các module giáo dục, B2B cho SME, và nội dung cấp cao. Giới thiệu Duocareers.</p>
+                        <p class="mt-2 font-semibold text-cyan-700">Mục tiêu: Đạt doanh thu 15 tỷ VND.</p>
+                    </div>
+                    <!-- Phase 3 -->
+                    <div class="pl-12 relative timeline-item">
+                         <div class="text-amber-500 text-sm font-bold mb-1">GIAI ĐOẠN 3 (NĂM 3)</div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Thống lĩnh & Kiến tạo Di sản</h3>
+                        <p class="text-slate-600">Ra mắt các dịch vụ cao cấp (CEOProfile, HPO), sản phẩm dữ liệu và công nghệ AI đột phá.</p>
+                        <p class="mt-2 font-semibold text-cyan-700">Mục tiêu: Đạt doanh thu 35 tỷ VND.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marketing Events Section -->
+        <section id="events" class="py-20 md:py-28 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Sáng kiến Cộng đồng</h2>
+                    <p class="mt-6 text-lg text-slate-600">Chúng tôi không chỉ xây dựng nền tảng, chúng tôi còn kiến tạo sân chơi. Hai cuộc thi quy mô toàn quốc là minh chứng cho cam kết phát triển cộng đồng của NNS.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 text-center">
+                        <div class="text-4xl mb-4">🏆</div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">HRExpert Contest</h3>
+                        <p class="text-slate-600">Cuộc thi chuyên môn uy tín nhất dành cho cộng đồng nhân sự Việt Nam, nơi các chuyên gia và lãnh đạo thể hiện tài năng và kết nối.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 text-center">
+                        <div class="text-4xl mb-4">💡</div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Startup Generation Contest</h3>
+                        <p class="text-slate-600">Vườn ươm tài năng khởi nghiệp, cuộc thi sinh viên khởi nghiệp toàn quốc, kết nối những ý tưởng đột phá với các nhà đầu tư và cố vấn.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Financials Section -->
+        <section id="financials" class="py-20 md:py-28 bg-slate-100 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Phân tích Tài chính</h2>
+                    <p class="mt-6 text-lg text-slate-600">Chúng tôi xây dựng một mô hình kinh doanh bền vững với các dự báo tài chính rõ ràng, minh bạch, hướng tới mục tiêu hòa vốn trong năm thứ ba.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex justify-center border-b border-slate-300 mb-8">
+                        <button data-tab="pnl" class="financial-tab flex-1 p-4 font-semibold border-b-2 transition-colors active">Kết quả Kinh doanh</button>
+                        <button data-tab="cf" class="financial-tab flex-1 p-4 font-semibold border-b-2 border-transparent transition-colors">Dòng tiền</button>
+                        <button data-tab="bs" class="financial-tab flex-1 p-4 font-semibold border-b-2 border-transparent transition-colors">Cân đối Kế toán</button>
+                    </div>
+                    <div id="financial-content" class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experts Section -->
+        <section id="experts" class="py-20 md:py-28 scroll-reveal">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold text-slate-900">Đội ngũ Chuyên gia</h2>
+                    <p class="mt-6 text-lg text-slate-600">Sức mạnh của NNS đến từ con người. Chúng tôi tự hào có một đội ngũ lãnh đạo và chuyên gia tư vấn đầu ngành, những người định hình chiến lược và mang lại giá trị thực tiễn cho khách hàng.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
+                    <!-- Expert 1 -->
+                    <div class="text-center">
+                        <div class="relative">
+                            <div class="bg-white rounded-2xl shadow-xl p-6 pt-24">
+                                <div class="expert-avatar">👤</div>
+                                <h3 class="text-xl font-bold text-slate-900">Bùi Doãn Chung</h3>
+                                <p class="text-amber-600 font-semibold">Founder & CEO</p>
+                                <p class="mt-4 text-slate-600 text-sm">Kiến trúc sư trưởng của hệ sinh thái, với tầm nhìn chiến lược và kinh nghiệm sâu rộng trong lĩnh vực nhân sự và phát triển tổ chức.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Expert 2 -->
+                    <div class="text-center">
+                        <div class="relative">
+                            <div class="bg-white rounded-2xl shadow-xl p-6 pt-24">
+                                <div class="expert-avatar">🤖</div>
+                                <h3 class="text-xl font-bold text-slate-900">(Cần bổ sung)</h3>
+                                <p class="text-amber-600 font-semibold">CTO (Giám đốc Công nghệ)</p>
+                                <p class="mt-4 text-slate-600 text-sm">Chịu trách nhiệm xây dựng và phát triển nền tảng công nghệ lõi HRPioneer, đặc biệt là các ứng dụng AI và Dữ liệu lớn.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Expert 3 -->
+                    <div class="text-center">
+                        <div class="relative">
+                            <div class="bg-white rounded-2xl shadow-xl p-6 pt-24">
+                                <div class="expert-avatar">📈</div>
+                                <h3 class="text-xl font-bold text-slate-900">(Cần bổ sung)</h3>
+                                <p class="text-amber-600 font-semibold">CCO (Giám đốc Kinh doanh)</p>
+                                <p class="mt-4 text-slate-600 text-sm">Chịu trách nhiệm dẫn dắt các hoạt động marketing, bán hàng và tăng trưởng doanh thu trên toàn hệ sinh thái.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section id="cta" class="py-20 md:py-28 hero-bg text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold">Lời Kêu gọi Hợp tác</h2>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-200">Thị trường vốn con người Việt Nam đang ở một bước ngoặt lịch sử. NNS không chỉ có một tầm nhìn đúng đắn, mà còn sở hữu một lộ trình chi tiết và một mô hình kinh doanh bền vững. Chúng tôi không mời bạn đầu tư vào một công ty. Chúng tôi mời bạn cùng chúng tôi xây dựng một hạ tầng thiết yếu cho nền kinh tế số tương lai.</p>
+                <div class="mt-10">
+                     <a href="#contact" class="bg-amber-500 text-slate-900 font-bold py-4 px-10 rounded-full hover:bg-amber-400 transition-transform transform hover:scale-105 text-lg">Hãy cùng nhau "Shaping Future Work"</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-slate-900 text-white">
+        <div class="container mx-auto px-4 py-16">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold">NNS</h3>
+                    <p class="mt-4 text-slate-400">Shaping Future Work.</p>
+                    <p class="mt-2 text-slate-400">Kêu gọi đầu tư vòng hạt giống: 10 tỷ VND.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Giải pháp</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#solutions" class="text-slate-400 hover:text-white">Dành cho Doanh nghiệp</a></li>
+                        <li><a href="#solutions" class="text-slate-400 hover:text-white">Phát triển Sự nghiệp</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="text-lg font-semibold mb-4">Khám phá</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-slate-400 hover:text-white">Về NNS</a></li>
+                        <li><a href="#insights" class="text-slate-400 hover:text-white">Tri thức & Insights</a></li>
+                        <li><a href="#experts" class="text-slate-400 hover:text-white">Đội ngũ Chuyên gia</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Kết nối với chúng tôi</h4>
+                    <p class="text-slate-400">Email: contact@nns.com.vn</p>
+                    <p class="text-slate-400">Hotline: 0905698996</p>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-800 pt-8 text-center text-slate-500">
+                <p>&copy; 2025 NNS. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Gemini Chatbot -->
+    <div id="gemini-chat-container">
+        <button id="gemini-fab" class="fixed bottom-6 right-6 bg-cyan-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-3xl hover:bg-cyan-700 transition-transform transform hover:scale-110">
+            ✨
+        </button>
+        <div id="gemini-popup" class="gemini-chat-popup fixed bottom-24 right-6 w-full max-w-sm h-[60vh] bg-white rounded-2xl shadow-2xl flex flex-col hidden origin-bottom-right">
+            <div class="bg-cyan-700 text-white p-4 rounded-t-2xl">
+                <h3 class="font-bold text-lg">Trợ lý Chiến lược AI</h3>
+                <p class="text-sm opacity-80">Hỏi bất cứ điều gì về Kế hoạch Kinh doanh NNS</p>
+            </div>
+            <div id="gemini-chat-history" class="flex-1 p-4 overflow-y-auto space-y-4">
+                <div class="flex">
+                    <div class="gemini-chat-bubble bg-slate-100 p-3 rounded-lg rounded-bl-none">
+                        <p class="text-sm">Chào bạn! Tôi có thể giúp gì trong việc phân tích kế hoạch kinh doanh này?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-200">
+                <div class="flex gap-2">
+                    <input type="text" id="gemini-chat-input" class="flex-1 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none" placeholder="Ví dụ: Lợi thế cạnh tranh của NNS là gì?">
+                    <button id="gemini-chat-send" class="bg-cyan-600 text-white px-4 rounded-lg font-bold hover:bg-cyan-700 flex items-center justify-center">
+                        <span id="send-btn-text">Gửi</span>
+                        <div id="send-spinner" class="hidden gemini-spinner"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/plain" id="businessPlanData">
+        Đây là toàn bộ kế hoạch kinh doanh của Hệ sinh thái NNS (Next-gen Navigation System). Tầm nhìn 2030 là kiến tạo "Hệ điều hành cho Vốn con người" của nền kinh tế số Việt Nam. Sứ mệnh là giảm thiểu ma sát và gia tăng tính thanh khoản cho thị trường lao động. Slogan là "Shaping Future Work". Triết lý kinh doanh là 4x4, phục vụ 4 nhóm khách hàng (Sinh viên, Chuyên gia, Lãnh đạo, Doanh chủ) với 4 trụ cột dịch vụ (Học tập, Làm việc, Sự nghiệp đôi, Di sản). Kiến trúc hệ sinh thái gồm Lõi Công nghệ HRPioneer.com, Cổng chính NNS.com.vn và các vệ tinh chuyên biệt. Lộ trình phát triển gồm 3 giai đoạn: Giai đoạn 1 (Năm 1) tập trung gieo mầm với StudentCorp.vn, nghenhansu.vn, vnexpert.vn, mục tiêu 50,000 sinh viên & 500 chuyên gia. Giai đoạn 2 (Năm 2) mở rộng và thương mại hóa với hrexpert.edu.vn, vietsme.vn, hrleader.vn, mục tiêu doanh thu 15 tỷ VND. Giai đoạn 3 (Năm 3) thống lĩnh với ceoprofile.vn, hpo.com.vn, hrdata.vn, mục tiêu doanh thu 35 tỷ VND. NNS sẽ tổ chức 2 cuộc thi: HRExpert Contest và Startup Generation Contest. Dự báo tài chính: Doanh thu năm 1 là 5 tỷ, năm 2 là 15 tỷ, năm 3 là 35 tỷ. Lợi nhuận sau thuế năm 1 là -5 tỷ, năm 2 là -1.5 tỷ, năm 3 là 7.2 tỷ. Kêu gọi đầu tư vòng hạt giống 10 tỷ VND.
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            mobileMenuButton.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                hamburgerIcon.textContent = isHidden ? '☰' : '✕';
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    if (href.length > 1) {
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                    
+                    if (mobileMenu.classList.contains('hidden') === false) {
+                        mobileMenu.classList.add('hidden');
+                        hamburgerIcon.textContent = '☰';
+                    }
+                });
+            });
+            
+            // Insights Chart
+            const ctx = document.getElementById('insightsChart');
+            if(ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['AI & Machine Learning', 'Data Analytics', 'Digital Marketing', 'Cloud Computing', 'Cybersecurity', 'Product Management'],
+                        datasets: [{
+                            label: 'Tỷ lệ tăng trưởng nhu cầu kỹ năng (%)',
+                            data: [74, 65, 60, 55, 52, 48],
+                            backgroundColor: 'rgba(8, 145, 178, 0.6)',
+                            borderColor: 'rgba(8, 145, 178, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false }, title: { display: true, text: 'Các kỹ năng có nhu cầu tăng trưởng cao nhất', font: { size: 16, family: "'Be Vietnam Pro', sans-serif" }, color: '#334155' } },
+                        scales: { x: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { font: { family: "'Be Vietnam Pro', sans-serif" }, color: '#475569' } }, y: { grid: { display: false }, ticks: { font: { family: "'Be Vietnam Pro', sans-serif" }, color: '#475569' } } }
+                    }
+                });
+            }
+
+            // Financials Tab
+            const financialTabs = document.querySelectorAll('.financial-tab');
+            const financialContent = document.getElementById('financial-content');
+            const financialData = {
+                pnl: {
+                    title: 'Báo cáo Kết quả Kinh doanh Dự kiến (Tỷ VND)',
+                    chartType: 'bar',
+                    labels: ['Năm 1', 'Năm 2', 'Năm 3'],
+                    datasets: [
+                        { label: 'Doanh thu', data: [5.0, 15.0, 35.0], backgroundColor: 'rgba(8, 145, 178, 0.6)' },
+                        { label: 'Lợi nhuận Sau thuế', data: [-5.0, -1.5, 7.2], backgroundColor: 'rgba(245, 158, 11, 0.6)' }
+                    ],
+                    table: `
+                        <div class="overflow-x-auto"><table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-6 py-3">Hạng mục</th><th class="px-6 py-3 text-right">Năm 1</th><th class="px-6 py-3 text-right">Năm 2</th><th class="px-6 py-3 text-right">Năm 3</th></tr></thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-6 py-4 font-bold">Doanh thu</td><td class="px-6 py-4 text-right font-bold">5.0</td><td class="px-6 py-4 text-right font-bold">15.0</td><td class="px-6 py-4 text-right font-bold">35.0</td></tr>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Lợi nhuận gộp</td><td class="px-6 py-4 text-right">4.0</td><td class="px-6 py-4 text-right">12.5</td><td class="px-6 py-4 text-right">30.0</td></tr>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Lợi nhuận Trước thuế</td><td class="px-6 py-4 text-right text-red-600">(5.0)</td><td class="px-6 py-4 text-right text-red-600">(1.5)</td><td class="px-6 py-4 text-right text-green-600">9.0</td></tr>
+                                <tr class="bg-white"><td class="px-6 py-4 font-bold">Lợi nhuận Sau thuế</td><td class="px-6 py-4 text-right font-bold text-red-600">(5.0)</td><td class="px-6 py-4 text-right font-bold text-red-600">(1.5)</td><td class="px-6 py-4 text-right font-bold text-green-600">7.2</td></tr>
+                            </tbody>
+                        </table></div>`
+                },
+                cf: {
+                    title: 'Báo cáo Dòng tiền Dự kiến (Tỷ VND)',
+                    chartType: 'line',
+                    labels: ['Bắt đầu', 'Năm 1', 'Năm 2', 'Năm 3'],
+                    datasets: [
+                        { label: 'Tiền tồn cuối kỳ', data: [0, 4.5, 2.0, 9.5], borderColor: '#0891b2', tension: 0.1, fill: false }
+                    ],
+                    table: `
+                        <div class="overflow-x-auto"><table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-6 py-3">Hạng mục</th><th class="px-6 py-3 text-right">Năm 1</th><th class="px-6 py-3 text-right">Năm 2</th><th class="px-6 py-3 text-right">Năm 3</th></tr></thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Dòng tiền từ HĐKD</td><td class="px-6 py-4 text-right text-red-600">(4.5)</td><td class="px-6 py-4 text-right text-red-600">(1.0)</td><td class="px-6 py-4 text-right text-green-600">9.5</td></tr>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Dòng tiền từ HĐĐT</td><td class="px-6 py-4 text-right text-red-600">(1.0)</td><td class="px-6 py-4 text-right text-red-600">(1.5)</td><td class="px-6 py-4 text-right text-red-600">(2.0)</td></tr>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Dòng tiền từ HĐTC</td><td class="px-6 py-4 text-right text-green-600">10.0</td><td class="px-6 py-4 text-right">0</td><td class="px-6 py-4 text-right">0</td></tr>
+                                <tr class="bg-white"><td class="px-6 py-4 font-bold">Tiền tồn cuối kỳ</td><td class="px-6 py-4 text-right font-bold text-green-600">4.5</td><td class="px-6 py-4 text-right font-bold text-green-600">2.0</td><td class="px-6 py-4 text-right font-bold text-green-600">9.5</td></tr>
+                            </tbody>
+                        </table></div>`
+                },
+                bs: {
+                    title: 'Bảng Cân đối Kế toán Dự kiến (Tỷ VND)',
+                    chartType: 'doughnut',
+                    labels: ['Tài sản', 'Nguồn vốn'],
+                    datasets: [
+                         { label: 'Năm 1', data: [5.4, 5.4], backgroundColor: ['#0e7490', '#67e8f9'] },
+                         { label: 'Năm 2', data: [4.2, 4.2], backgroundColor: ['#155e75', '#22d3ee'] },
+                         { label: 'Năm 3', data: [13.3, 13.3], backgroundColor: ['#164e63', '#06b6d4'] }
+                    ],
+                    table: `
+                        <div class="overflow-x-auto"><table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-6 py-3">Hạng mục</th><th class="px-6 py-3 text-right">Năm 1</th><th class="px-6 py-3 text-right">Năm 2</th><th class="px-6 py-3 text-right">Năm 3</th></tr></thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-6 py-4 font-bold">Tổng Tài sản</td><td class="px-6 py-4 text-right font-bold">5.4</td><td class="px-6 py-4 text-right font-bold">4.2</td><td class="px-6 py-4 text-right font-bold">13.3</td></tr>
+                                <tr class="bg-white border-b"><td class="px-6 py-4">Nợ phải trả</td><td class="px-6 py-4 text-right">0.4</td><td class="px-6 py-4 text-right">0.7</td><td class="px-6 py-4 text-right">1.1</td></tr>
+                                <tr class="bg-white"><td class="px-6 py-4">Vốn chủ sở hữu</td><td class="px-6 py-4 text-right">5.0</td><td class="px-6 py-4 text-right">3.5</td><td class="px-6 py-4 text-right">12.2</td></tr>
+                            </tbody>
+                        </table></div>`
+                }
+            };
+
+            let financialChart;
+
+            function renderFinancialTab(tabName) {
+                const data = financialData[tabName];
+                let chartHtml = '';
+                if(data.chartType !== 'doughnut') {
+                    chartHtml = `<div class="chart-container mb-8 h-64 md:h-80"><canvas id="financialChart"></canvas></div>`;
+                }
+                
+                financialContent.innerHTML = chartHtml + data.table;
+
+                if (financialChart) {
+                    financialChart.destroy();
+                }
+
+                if(data.chartType !== 'doughnut') {
+                    const ctx = document.getElementById('financialChart');
+                    if (!ctx) return;
+                    financialChart = new Chart(ctx, {
+                        type: data.chartType,
+                        data: {
+                            labels: data.labels,
+                            datasets: data.datasets
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { title: { display: true, text: data.title, font: { size: 16, family: "'Be Vietnam Pro', sans-serif" }, color: '#334155' } },
+                            scales: { x: { ticks: { font: { family: "'Be Vietnam Pro', sans-serif" } } }, y: { ticks: { font: { family: "'Be Vietnam Pro', sans-serif" } } } }
+                        }
+                    });
+                }
+            }
+
+            financialTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    financialTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderFinancialTab(tab.dataset.tab);
+                });
+            });
+
+            renderFinancialTab('pnl');
+
+            // Gemini API Features
+            const callGeminiAPI = async (prompt) => {
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        return "Đã có lỗi xảy ra. Vui lòng thử lại.";
+                    }
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    }
+                    return "Không nhận được phản hồi hợp lệ. Vui lòng thử lại.";
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    return "Lỗi kết nối. Vui lòng kiểm tra và thử lại.";
+                }
+            };
+
+            // Feature 1: Strategic Co-Pilot Chatbot
+            const fab = document.getElementById('gemini-fab');
+            const popup = document.getElementById('gemini-popup');
+            const chatHistory = document.getElementById('gemini-chat-history');
+            const chatInput = document.getElementById('gemini-chat-input');
+            const chatSend = document.getElementById('gemini-chat-send');
+            const businessPlanContext = document.getElementById('businessPlanData').textContent;
+            const sendBtnText = document.getElementById('send-btn-text');
+            const sendSpinner = document.getElementById('send-spinner');
+
+            fab.addEventListener('click', () => {
+                popup.classList.toggle('hidden');
+            });
+
+            const handleSendMessage = async () => {
+                const userMessage = chatInput.value.trim();
+                if (!userMessage) return;
+
+                // Display user message
+                chatHistory.innerHTML += `
+                    <div class="flex justify-end">
+                        <div class="gemini-chat-bubble bg-cyan-600 text-white p-3 rounded-lg rounded-br-none">
+                            <p class="text-sm">${userMessage}</p>
+                        </div>
+                    </div>`;
+                chatInput.value = '';
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                // Show loading indicator
+                sendBtnText.classList.add('hidden');
+                sendSpinner.classList.remove('hidden');
+                chatSend.disabled = true;
+
+                // Call Gemini
+                const prompt = `Dựa trên kế hoạch kinh doanh sau: "${businessPlanContext}". Hãy trả lời câu hỏi một cách ngắn gọn và chuyên nghiệp: "${userMessage}"`;
+                const aiResponse = await callGeminiAPI(prompt);
+
+                // Display AI response
+                chatHistory.innerHTML += `
+                    <div class="flex">
+                        <div class="gemini-chat-bubble bg-slate-100 p-3 rounded-lg rounded-bl-none">
+                            <p class="text-sm">${aiResponse.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                
+                // Hide loading indicator
+                sendBtnText.classList.remove('hidden');
+                sendSpinner.classList.add('hidden');
+                chatSend.disabled = false;
+            };
+
+            chatSend.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+
+            // Feature 2: Market Opportunity Analysis
+            const generateBtn = document.getElementById('generate-analysis-btn');
+            const industrySelect = document.getElementById('industry-select');
+            const roleSelect = document.getElementById('role-select');
+            const analysisResult = document.getElementById('analysis-result');
+            const generateBtnText = document.getElementById('generate-btn-text');
+            const generateSpinner = document.getElementById('generate-spinner');
+
+            generateBtn.addEventListener('click', async () => {
+                const industry = industrySelect.options[industrySelect.selectedIndex].text;
+                const role = roleSelect.options[roleSelect.selectedIndex].text;
+
+                // Show loading state
+                analysisResult.innerHTML = '<div class="flex justify-center items-center h-full"><div class="gemini-spinner"></div><p class="ml-2 text-sm text-slate-500">Đang tạo phân tích...</p></div>';
+                generateBtnText.classList.add('hidden');
+                generateSpinner.classList.remove('hidden');
+                generateBtn.disabled = true;
+
+                // Call Gemini
+                const prompt = `Bạn là một chuyên gia phân tích chiến lược nhân sự. Dựa trên các xu hướng chung tại thị trường Việt Nam, hãy viết một bản phân tích ngắn (khoảng 3 đoạn) về cơ hội thị trường cho vai trò "${role}" trong ngành "${industry}". Đề cập đến: 1. Tiềm năng và nhu cầu. 2. Các kỹ năng quan trọng nhất. 3. Thách thức chính mà doanh nghiệp gặp phải khi tuyển dụng.`;
+                const resultText = await callGeminiAPI(prompt);
+
+                // Display result
+                analysisResult.innerHTML = `<p class="text-sm">${resultText.replace(/\n/g, '<br>')}</p>`;
+                
+                // Hide loading state
+                generateBtnText.classList.remove('hidden');
+                generateSpinner.classList.add('hidden');
+                generateBtn.disabled = false;
+            });
+
+            // Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.scroll-reveal');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
